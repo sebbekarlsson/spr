@@ -12,17 +12,23 @@ typedef struct SPR_PIXEL_STRUCT
 
 spr_pixel_T* init_spr_pixel(int r, int g, int b);
 
+void spr_pixel_free(spr_pixel_T* pixel);
+
 typedef struct SPR_PIXEL_ROW_STRUCT
 {
     spr_pixel_T** pixels;
     size_t pixels_size;
 } spr_pixel_row_T;
 
+void spr_pixel_row_free(spr_pixel_row_T* pixel_row);
+
 typedef struct SPR_FRAME_STRUCT
 {
     spr_pixel_row_T** pixel_rows;
     size_t pixel_rows_size;
 } spr_frame_T;
+
+void spr_frame_free(spr_frame_T* frame);
 
 typedef struct SPR_STRUCT
 {
@@ -52,4 +58,6 @@ spr_T* init_spr(
 spr_T* spr_load_from_file(const char* filename);
 
 void spr_write_to_file(spr_T* spr, const char* filename);
+
+void spr_free(spr_T* spr);
 #endif

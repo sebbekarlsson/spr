@@ -31,6 +31,38 @@ spr_T* init_spr(
     return spr;
 }
 
+void spr_pixel_free(spr_pixel_T* pixel)
+{
+    free(pixel);
+}
+
+void spr_pixel_row_free(spr_pixel_row_T* pixel_row)
+{
+    for (int i = 0; i < pixel_row->pixels_size; i++)
+        spr_pixel_free(pixel_row->pixels[i]);
+
+    free(pixel_row->pixels);
+    free(pixel_row);
+}
+
+void spr_frame_free(spr_frame_T* frame)
+{
+    for (int i = 0; i < frame->pixel_rows_size; i++)
+        spr_pixel_row_free(frame->pixel_rows[i]);
+
+    free(frame->pixel_rows);
+    free(frame);
+}
+
+void spr_free(spr_T* spr)
+{
+    for (int i = 0; i < spr->frames_size; i++)
+        spr_frame_free(spr->frames[i]);
+
+    free(spr->frames);
+    free(spr);
+}
+
 spr_T* spr_load_from_file(const char* filename)
 {
     char* contents = read_file((char*) filename);
@@ -41,6 +73,8 @@ spr_T* spr_load_from_file(const char* filename)
     spr_T* spr = spr_parser_parse(parser);
     
     free(contents);
+    free(lexer);
+    free(parser);
 
     return spr;
 }
@@ -84,11 +118,11 @@ void spr_write_to_file(spr_T* spr, const char* filename)
 
                 if (x < spr->width - 1)
                 {
-                    pixel_str = realloc(pixel_str, (strlen(pixel_str) + 2) * sizeof(char));
+                    pixel_str = realloc(pixel_str, (strlen(pixel_str) + 3) * sizeof(char));
                     strcat(pixel_str, "; ");
                 }
 
-                pixel_row_str = realloc(pixel_row_str, (strlen(pixel_row_str) + strlen(pixel_str) + 1) * sizeof(char));
+                pixel_row_str = realloc(pixel_row_str, (strlen(pixel_row_str) + strlen(pixel_str) + 2) * sizeof(char));
                 strcat(pixel_row_str, pixel_str);
                 free(pixel_str);
             }
@@ -98,6 +132,8 @@ void spr_write_to_file(spr_T* spr, const char* filename)
 
             buffer = realloc(buffer, (strlen(buffer) + strlen(pixel_row_str) + 1) * sizeof(char));
             strcat(buffer, pixel_row_str);
+
+            free(pixel_row_str);
         }
     }
 

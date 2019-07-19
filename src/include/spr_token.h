@@ -15,4 +15,6 @@ typedef struct SPR_TOKEN_STRUCT
 } spr_token_T;
 
 spr_token_T* init_spr_token(int type, char* value);
+
+void spr_token_free(spr_token_T* token);
 #endif

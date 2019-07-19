@@ -28,6 +28,7 @@ void spr_parser_eat(spr_parser_T* parser, int token_type)
     }
     else if (parser->current_token->type == token_type)
     {
+        spr_token_free(parser->current_token);
         parser->current_token = spr_lexer_get_next_token(parser->lexer);
     }
 }
@@ -55,7 +56,7 @@ spr_T* spr_parser_parse(spr_parser_T* parser)
         }
     }
 
-    return init_spr(
+    spr_T* spr = init_spr(
         ast_info->info_value[0],
         ast_info->info_value[1],
         ast_info->info_value[2],
@@ -66,6 +67,11 @@ spr_T* spr_parser_parse(spr_parser_T* parser)
         frames,
         frames_size
     );
+
+    free(ast_info);
+    free(parser->current_token);
+
+    return spr;
 }
 
 spr_AST_T* spr_parser_parse_info(spr_parser_T* parser)

@@ -10,3 +10,9 @@ spr_token_T* init_spr_token(int type, char* value)
 
     return token;
 }
+
+void spr_token_free(spr_token_T* token)
+{
+    free(token->value);
+    free(token);
+}

@@ -42,5 +42,7 @@ int main(int argc, char* argv[])
 
     spr_write_to_file(spr, "tmp.spr");
 
+    spr_free(spr);
+
     return 0;
 }
