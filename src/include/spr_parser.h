@@ -21,9 +21,9 @@ spr_T* spr_parser_parse(spr_parser_T* parser);
 
 spr_AST_T* spr_parser_parse_info(spr_parser_T* parser);
 
-spr_AST_T* spr_parser_parse_frame(spr_parser_T* parser);
+spr_frame_T* spr_parser_parse_frame(spr_parser_T* parser);
 
-spr_AST_T* spr_parser_parse_pixel(spr_parser_T* parser);
+spr_pixel_T* spr_parser_parse_pixel(spr_parser_T* parser);
 
-spr_AST_T* spr_parser_parse_pixel_row(spr_parser_T* parser);
+spr_pixel_row_T* spr_parser_parse_pixel_row(spr_parser_T* parser);
 #endif

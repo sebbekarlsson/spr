@@ -5,4 +5,6 @@
 
 
 char* read_file(char* filename);
+
+void write_file(const char* filename, char* contents);
 #endif

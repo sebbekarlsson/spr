@@ -35,8 +35,8 @@ void spr_parser_eat(spr_parser_T* parser, int token_type)
 spr_T* spr_parser_parse(spr_parser_T* parser)
 {
     spr_AST_T* ast_info = (void*) 0;
-    spr_AST_T** ast_frames = (void*) 0;
-    size_t ast_frames_size = 0;
+    spr_frame_T** frames = (void*) 0;
+    size_t frames_size = 0;
 
     while (parser->current_token->type != TOKEN_EOF)
     {
@@ -49,13 +49,23 @@ spr_T* spr_parser_parse(spr_parser_T* parser)
 
         while (strcmp(parser->current_token->value, "frame") == 0)
         {
-            ast_frames_size += 1;
-            ast_frames = realloc(ast_frames, ast_frames_size * sizeof(struct SPR_AST_STRUCT*));
-            ast_frames[ast_frames_size - 1] = spr_parser_parse_frame(parser);
+            frames_size += 1;
+            frames = realloc(frames, frames_size * sizeof(struct SPR_AST_STRUCT*));
+            frames[frames_size - 1] = spr_parser_parse_frame(parser);
         }
     }
 
-    return init_spr(ast_info->info_value, ast_frames, ast_frames_size);
+    return init_spr(
+        ast_info->info_value[0],
+        ast_info->info_value[1],
+        ast_info->info_value[2],
+        ast_info->info_value[3],
+        ast_info->info_value[4],
+        ast_info->info_value[5],
+        ast_info->info_value[6],
+        frames,
+        frames_size
+    );
 }
 
 spr_AST_T* spr_parser_parse_info(spr_parser_T* parser)
@@ -104,77 +114,78 @@ spr_AST_T* spr_parser_parse_info(spr_parser_T* parser)
     return ast_info;
 }
 
-spr_AST_T* spr_parser_parse_frame(spr_parser_T* parser)
+spr_frame_T* spr_parser_parse_frame(spr_parser_T* parser)
 {
     spr_parser_eat(parser, TOKEN_ID);
 
-    spr_AST_T* ast_frame = init_spr_ast(AST_FRAME);
-    ast_frame->frame_value_pixel_rows = (void*) 0;
-    ast_frame->frame_value_pixel_rows_size = 0;
+    spr_frame_T* frame = calloc(1, sizeof(struct SPR_FRAME_STRUCT));
+
+    frame->pixel_rows = (void*) 0;
+    frame->pixel_rows_size = 0;
 
     while (parser->current_token->type != TOKEN_ID)
     {
         if (parser->current_token->type == TOKEN_EOF)
             break;
 
-        ast_frame->frame_value_pixel_rows_size += 1;
-        ast_frame->frame_value_pixel_rows = realloc(
-            ast_frame->frame_value_pixel_rows,
-            ast_frame->frame_value_pixel_rows_size * sizeof(struct SPR_AST_STRUCT*)
+        frame->pixel_rows_size += 1;
+        frame->pixel_rows = realloc(
+            frame->pixel_rows,
+            frame->pixel_rows_size * sizeof(struct SPR_AST_STRUCT*)
         );
-        ast_frame->frame_value_pixel_rows[ast_frame->frame_value_pixel_rows_size - 1] = spr_parser_parse_pixel_row(parser);
+        frame->pixel_rows[frame->pixel_rows_size - 1] = spr_parser_parse_pixel_row(parser);
     }
 
-    return ast_frame;
+    return frame;
 }
 
-spr_AST_T* spr_parser_parse_pixel(spr_parser_T* parser)
+spr_pixel_T* spr_parser_parse_pixel(spr_parser_T* parser)
 {
     // 255,255,255,255;
-    spr_AST_T* ast_pixel = init_spr_ast(AST_PIXEL);
+    spr_pixel_T* pixel = calloc(1, sizeof(struct SPR_PIXEL_STRUCT));
 
-    ast_pixel->pixel_value[0] = atoi(parser->current_token->value);
+    pixel->r = atoi(parser->current_token->value);
 
     spr_parser_eat(parser, TOKEN_INT);
 
 
     spr_parser_eat(parser, TOKEN_COMMA);
 
-    ast_pixel->pixel_value[1] = atoi(parser->current_token->value);
+    pixel->g = atoi(parser->current_token->value);
 
     spr_parser_eat(parser, TOKEN_INT);
     spr_parser_eat(parser, TOKEN_COMMA);
     
-    ast_pixel->pixel_value[2] = atoi(parser->current_token->value);
+    pixel->b = atoi(parser->current_token->value);
 
     spr_parser_eat(parser, TOKEN_INT);
     spr_parser_eat(parser, TOKEN_COMMA);
 
     
-    ast_pixel->pixel_value[3] = atoi(parser->current_token->value);
+    pixel->a = atoi(parser->current_token->value);
     spr_parser_eat(parser, TOKEN_INT);
 
-    return ast_pixel;
+    return pixel;
 }
 
-spr_AST_T* spr_parser_parse_pixel_row(spr_parser_T* parser)
+spr_pixel_row_T* spr_parser_parse_pixel_row(spr_parser_T* parser)
 {
-    spr_AST_T* ast_pixel_row = init_spr_ast(AST_PIXEL_ROW);
-    ast_pixel_row->pixel_row_size = 0;
-    ast_pixel_row->pixel_row_value = (void*) 0;
+    spr_pixel_row_T* pixel_row = calloc(1, sizeof(struct SPR_PIXEL_ROW_STRUCT));
+    pixel_row->pixels_size = 0;
+    pixel_row->pixels = (void*) 0;
 
     for (int i = 0; i < parser->row_width; i++)
     {
-        ast_pixel_row->pixel_row_size += 1;
-        ast_pixel_row->pixel_row_value = realloc(
-            ast_pixel_row->pixel_row_value,
-            ast_pixel_row->pixel_row_size * sizeof(struct SPR_AST_STRUCT*)
+        pixel_row->pixels_size += 1;
+        pixel_row->pixels = realloc(
+            pixel_row->pixels,
+            pixel_row->pixels_size * sizeof(struct SPR_AST_STRUCT*)
         );
-        ast_pixel_row->pixel_row_value[ast_pixel_row->pixel_row_size - 1] = spr_parser_parse_pixel(parser);
+        pixel_row->pixels[pixel_row->pixels_size - 1] = spr_parser_parse_pixel(parser);
         
         if (i < parser->row_width - 1)
             spr_parser_eat(parser, TOKEN_SEMI);
     }
 
-    return ast_pixel_row;
+    return pixel_row;
 }

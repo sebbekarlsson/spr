@@ -29,3 +29,14 @@ char* read_file(char* filename)
 
     return buffer;
 }
+
+void write_file(const char* filename, char* contents)
+{
+    FILE * fp;
+    
+    fp = fopen(filename, "w");
+
+    fprintf(fp, contents);
+
+    fclose (fp);
+}
