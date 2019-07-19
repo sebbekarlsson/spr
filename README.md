@@ -87,6 +87,9 @@ for (int i = 0; i < spr->frames_size; i++)
         }
     }
 }
+
+// dont forget to free it
+spr_free(spr);
 ```
 
 ## Writing a .spr file
@@ -108,4 +111,7 @@ spr_T* spr = init_spr(
 )
 
 spr_write_to_file(spr, "tmp.spr");
+
+// dont forget to free it
+spr_free(spr);
 ```
