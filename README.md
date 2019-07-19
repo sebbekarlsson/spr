@@ -92,6 +92,8 @@ for (int i = 0; i < spr->frames_size; i++)
 ## Writing a .spr file
 > Here is an example in C on how to write a .spr file:
 ```C
+#include <spr/spr.h>
+
 
 spr_T* spr = init_spr(
     16, // width

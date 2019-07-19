@@ -13,6 +13,13 @@ libspr.a: $(objects)
 %.o: %.c include/%.h
 	gcc -c $(flags) $< -o $@
 
+
+install:
+	make libspr.a
+	mkdir -p /usr/local/include/spr
+	cp -r ./src/include/* /usr/local/include/spr/.
+	cp ./libspr.a /usr/local/lib/.
+
 clean:
 	-rm *.out
 	-rm *.o
