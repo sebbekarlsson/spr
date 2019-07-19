@@ -10,7 +10,7 @@ typedef struct SPR_PIXEL_STRUCT
     int a;
 } spr_pixel_T;
 
-spr_pixel_T* init_spr_pixel(int r, int g, int b);
+spr_pixel_T* init_spr_pixel(int r, int g, int b, int a);
 
 void spr_pixel_free(spr_pixel_T* pixel);
 
@@ -29,6 +29,8 @@ typedef struct SPR_FRAME_STRUCT
 } spr_frame_T;
 
 void spr_frame_free(spr_frame_T* frame);
+
+spr_frame_T* spr_init_frame_from_data(unsigned char* data, int width, int height);
 
 typedef struct SPR_STRUCT
 {

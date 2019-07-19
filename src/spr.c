@@ -31,6 +31,17 @@ spr_T* init_spr(
     return spr;
 }
 
+spr_pixel_T* init_spr_pixel(int r, int g, int b, int a)
+{
+    spr_pixel_T* pixel = calloc(1, sizeof(struct SPR_PIXEL_STRUCT));
+    pixel->r = r;
+    pixel->g = g;
+    pixel->b = b;
+    pixel->a = a;
+
+    return pixel;
+}
+
 void spr_pixel_free(spr_pixel_T* pixel)
 {
     free(pixel);
@@ -63,9 +74,43 @@ void spr_free(spr_T* spr)
     free(spr);
 }
 
+spr_frame_T* spr_init_frame_from_data(unsigned char* data, int width, int height)
+{
+    spr_frame_T* frame = calloc(1, sizeof(struct SPR_FRAME_STRUCT));
+    frame->pixel_rows_size = 0;
+    frame->pixel_rows = (void*) 0;
+
+    for (int y = 0; y < height; y++)
+    {
+        spr_pixel_row_T* pixel_row = calloc(1, sizeof(struct SPR_PIXEL_ROW_STRUCT));
+        pixel_row->pixels_size = 0;
+        pixel_row->pixels = (void*) 0;
+
+        for (int x = 0; x < width; x++)
+        { 
+            unsigned int channels = 4;
+            unsigned char* pixel = data + (y * width + x) * channels;
+            unsigned char r = pixel[0];
+            unsigned char g = pixel[1];
+            unsigned char b = pixel[2];
+            unsigned char a = pixel[3];
+
+            pixel_row->pixels_size += 1;
+            pixel_row->pixels = realloc(pixel_row->pixels, pixel_row->pixels_size * sizeof(struct SPR_PIXEL_STRUCT));
+            pixel_row->pixels[pixel_row->pixels_size-1] = init_spr_pixel(r, g, b, a);
+        }
+
+        frame->pixel_rows_size += 1;
+        frame->pixel_rows = realloc(frame->pixel_rows, frame->pixel_rows_size * sizeof(struct SPR_PIXEL_ROW_STRUCT*));
+        frame->pixel_rows[frame->pixel_rows_size-1] = pixel_row;
+    }
+
+    return frame;
+}
+
 spr_T* spr_load_from_file(const char* filename)
 {
-    char* contents = read_file((char*) filename);
+    char* contents = spr_read_file((char*) filename);
 
     spr_lexer_T* lexer = init_spr_lexer(contents);
     spr_parser_T* parser = init_spr_parser(lexer);
