@@ -1,11 +1,12 @@
 #include "include/spr_lexer.h"
+#include "include/string_utils.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
 
 
-char* char_to_string(char c)
+char* spr_char_to_string(char c)
 {
     char* str = calloc(2, sizeof(char));
     str[0] = c;
@@ -50,7 +51,7 @@ spr_token_T* spr_lexer_collect_id(spr_lexer_T* lexer)
 
     while (isalnum(lexer->c) || lexer->c == '_')
     {
-        char* strchar = char_to_string(lexer->c);
+        char* strchar = spr_char_to_string(lexer->c);
         buffer = realloc(buffer, strlen(buffer) + 2);
         strcat(buffer, strchar);
         free(strchar);
@@ -70,7 +71,7 @@ spr_token_T* spr_lexer_collect_number(spr_lexer_T* lexer)
 
     while (isdigit(lexer->c))
     {
-        char* strchar = char_to_string(lexer->c);
+        char* strchar = spr_char_to_string(lexer->c);
         buffer = realloc(buffer, strlen(buffer) + 2);
         strcat(buffer, strchar);
         free(strchar);
@@ -80,7 +81,7 @@ spr_token_T* spr_lexer_collect_number(spr_lexer_T* lexer)
 
     if (lexer->c == '.')
     {
-        char* strchar = char_to_string(lexer->c);
+        char* strchar = spr_char_to_string(lexer->c);
         buffer = realloc(buffer, strlen(buffer) + 2);
         strcat(buffer, strchar);
         free(strchar);
@@ -91,7 +92,7 @@ spr_token_T* spr_lexer_collect_number(spr_lexer_T* lexer)
 
         while (isdigit(lexer->c))
         {
-            char* strchar = char_to_string(lexer->c);
+            char* strchar = spr_char_to_string(lexer->c);
             buffer = realloc(buffer, strlen(buffer) + 2);
             strcat(buffer, strchar);
             free(strchar);
@@ -103,9 +104,9 @@ spr_token_T* spr_lexer_collect_number(spr_lexer_T* lexer)
     return init_spr_token(type, buffer);
 }
 
-spr_token_T* lexer_advance_with_token(spr_lexer_T* lexer, int type)
+spr_token_T* spr_lexer_advance_with_token(spr_lexer_T* lexer, int type)
 {
-    char* value = char_to_string(lexer->c);
+    char* value = spr_char_to_string(lexer->c);
     spr_lexer_advance(lexer);
     return init_spr_token(type, value);
 }
@@ -125,8 +126,8 @@ spr_token_T* spr_lexer_get_next_token(spr_lexer_T* lexer)
 
         switch(lexer->c)
         {
-            case ';': return lexer_advance_with_token(lexer, TOKEN_SEMI); break;
-            case ',': return lexer_advance_with_token(lexer, TOKEN_COMMA); break;
+            case ';': return spr_lexer_advance_with_token(lexer, TOKEN_SEMI); break;
+            case ',': return spr_lexer_advance_with_token(lexer, TOKEN_COMMA); break;
             default: printf("[Line %d] Unexpected %c\n", lexer->line_n, lexer->c); exit(1); break;
         }
     }
