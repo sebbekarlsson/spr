@@ -7,4 +7,6 @@
 char* spr_read_file(char* filename);
 
 void write_file(const char* filename, char* contents);
+
+unsigned int spr_file_exists(const char* filename);
 #endif

@@ -1,4 +1,5 @@
 #include "include/io.h"
+#include <unistd.h>
 
 
 /**
@@ -39,4 +40,9 @@ void write_file(const char* filename, char* contents)
     fprintf(fp, contents);
 
     fclose (fp);
+}
+
+unsigned int spr_file_exists(const char* filename)
+{
+    return access(filename, F_OK) != -1;
 }

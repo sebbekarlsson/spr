@@ -110,7 +110,13 @@ spr_frame_T* spr_init_frame_from_data(unsigned char* data, int width, int height
 
 spr_T* spr_load_from_file(const char* filename)
 {
+    if (!spr_file_exists(filename))
+        return (void*) 0;
+
     char* contents = spr_read_file((char*) filename);
+    
+    if (contents == 0 || contents == (void*)0)
+        return (void*) 0;
 
     spr_lexer_T* lexer = init_spr_lexer(contents);
     spr_parser_T* parser = init_spr_parser(lexer);
