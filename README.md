@@ -29,7 +29,7 @@ frame
 ### A better description
 > Here is a better description of the content style:
 ```
-info <width(int)> <height(int)> <r(int)l> <g(int)> <b(int)> <delay(float)> <animated(int)>
+info <width(int)> <height(int)> <r(int)> <g(int)> <b(int)> <delay(float)> <animated(int)>
 frame
 pixel[r, g, b, a]; pixel[r, g, b, a]; pixel[r, g, b, a]
 pixel[r, g, b, a]; pixel[r, g, b, a]; pixel[r, g, b, a]
