@@ -1,17 +1,18 @@
 #ifndef SPR_H
 #define SPR_H
 #include "spr_AST.h"
+#include <stdint.h>
 
 
 typedef struct SPR_PIXEL_STRUCT
 {
-    unsigned int r;
-    unsigned int g;
-    unsigned int b;
-    unsigned int a;
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t a;
 } spr_pixel_T;
 
-spr_pixel_T* init_spr_pixel(unsigned int r, unsigned int g, unsigned int b, unsigned int a);
+spr_pixel_T* init_spr_pixel(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 void spr_pixel_free(spr_pixel_T* pixel);
 
@@ -37,9 +38,9 @@ typedef struct SPR_STRUCT
 {
     int width;
     int height;
-    unsigned int r;
-    unsigned int g;
-    unsigned int b;
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
     float delay;
     unsigned int animated;
     spr_frame_T** frames;
@@ -49,9 +50,9 @@ typedef struct SPR_STRUCT
 spr_T* init_spr(
     int width,
     int height,
-    unsigned int r,
-    unsigned int g,
-    unsigned int b,
+    uint8_t r,
+    uint8_t g,
+    uint8_t b,
     float delay,
     unsigned int animated,
     spr_frame_T** frames,

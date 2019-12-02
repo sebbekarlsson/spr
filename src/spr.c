@@ -8,9 +8,9 @@
 spr_T* init_spr(
     int width,
     int height,
-    unsigned int r,
-    unsigned int g,
-    unsigned int b,
+    uint8_t r,
+    uint8_t g,
+    uint8_t b,
     float delay,
     unsigned int animated,
     spr_frame_T** frames,
@@ -31,7 +31,7 @@ spr_T* init_spr(
     return spr;
 }
 
-spr_pixel_T* init_spr_pixel(unsigned int r, unsigned int g, unsigned int b, unsigned int a)
+spr_pixel_T* init_spr_pixel(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
     spr_pixel_T* pixel = calloc(1, sizeof(struct SPR_PIXEL_STRUCT));
     pixel->r = r;
