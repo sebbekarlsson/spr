@@ -96,7 +96,7 @@ spr_frame_T* spr_init_frame_from_data(unsigned char* data, int width, int height
             unsigned char a = pixel[3];
 
             pixel_row->pixels_size += 1;
-            pixel_row->pixels = realloc(pixel_row->pixels, pixel_row->pixels_size * sizeof(struct SPR_PIXEL_STRUCT));
+            pixel_row->pixels = realloc(pixel_row->pixels, pixel_row->pixels_size * sizeof(struct SPR_PIXEL_STRUCT*));
             pixel_row->pixels[pixel_row->pixels_size-1] = init_spr_pixel(r, g, b, a);
         }
 
