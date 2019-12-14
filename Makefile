@@ -1,11 +1,11 @@
 exec = a.out
-sources = $(wildcard src/*.c)
+sources = $(filter-out src/main.c, $(wildcard src/*.c))
 objects = $(sources:.c=.o)
 flags = -Wall -g
 
 
-$(exec): $(objects)
-	gcc $(objects) $(flags) -o $(exec)
+#$(exec): $(objects)
+#	gcc $(objects) $(flags) -o $(exec)
 
 libspr.a: $(objects)
 	ar rcs $@ $^
@@ -21,6 +21,7 @@ install:
 	cp ./libspr.a /usr/local/lib/.
 
 clean:
+	-rm *.a
 	-rm *.out
 	-rm *.o
 	-rm src/*.o
